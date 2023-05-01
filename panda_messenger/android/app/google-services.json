@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "519282160325",
+    "project_id": "test-messenger-c8a44",
+    "storage_bucket": "test-messenger-c8a44.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:519282160325:android:655c0c91634be96e4776ac",
+        "android_client_info": {
+          "package_name": "com.example.panda_messenger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "519282160325-68b7k8cqcqa363ja4v7rdu7d9o5vmc83.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuf1GtLQCyCODbcsrnAocwOjlj9kKAQ0Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "519282160325-68b7k8cqcqa363ja4v7rdu7d9o5vmc83.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
