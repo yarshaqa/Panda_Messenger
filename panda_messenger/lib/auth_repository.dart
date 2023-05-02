@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'firestore_data_provider.dart';
 
 class AuthRepository {
-
   static final AuthRepository authRepository = AuthRepository._internal();
 
   factory AuthRepository() {
@@ -25,7 +24,6 @@ class AuthRepository {
           email: userEmail, password: userPassword);
       firebaseDataProvider.createUser(
           auth.currentUser!, DateTime.now().toString(), userEmail);
-
     } on FirebaseAuthException catch (e) {
       print('FirebaseAuthException SignUp $e');
       throw Exception(e.message);
@@ -34,8 +32,8 @@ class AuthRepository {
 
   Future signIn(userEmail, userPassword) async {
     try {
-      await auth
-          .signInWithEmailAndPassword(email: userEmail, password: userPassword);
+      await auth.signInWithEmailAndPassword(
+          email: userEmail, password: userPassword);
       await firebaseDataProvider.loginUser();
     } on FirebaseAuthException catch (e) {
       print('userPassword: $userPassword');

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:panda_messenger/auth_repository.dart';
 import 'package:panda_messenger/ui/general_widgets.dart';
-import '../home_screen/home_cubit.dart';
 import '../home_screen/home_screen_widget.dart';
 import 'auth_cubit.dart';
 import 'auth_state.dart';
@@ -30,14 +29,13 @@ class AuthScreen extends StatelessWidget {
       BuildContext context, String page, PageController controller) {
     return BlocConsumer<AuthCubit, AuthStates>(listener: (context, state) {
       if (state is AuthErrorState) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(state.errorMessage)));
+        GeneralWidgets.defaultToastSnackBar(context, state.errorMessage);
       }
       if (state is AuthLoadedState) {
         Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (_) => HomeScreen()),);
+          context,
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
+        );
       }
     }, builder: (BuildContext context, state) {
       if (state is AuthInitialState || state is AuthErrorState) {
@@ -73,7 +71,8 @@ class AuthScreen extends StatelessWidget {
                     ),
                     onPressed: () {
                       controller.animateToPage(page == 'Sign in' ? 1 : 0,
-                          duration: Duration(seconds: 1), curve: Curves.ease);
+                          duration: const Duration(seconds: 1),
+                          curve: Curves.ease);
                     },
                     child: Text(
                       page == 'Sign in' ? 'Sign up >' : '< Sign In',
@@ -105,10 +104,14 @@ class AuthScreen extends StatelessWidget {
                     context.read<AuthCubit>().signUpWithEmail(
                         userEmail: _textEmailController.text.trim(),
                         userPassword: _textPasswordController.text.trim());
+                    _textEmailController.clear();
+                    _textPasswordController.clear();
                   } else {
                     context.read<AuthCubit>().signInWithEmail(
                         userEmail: _textEmailController.text.trim(),
                         userPassword: _textPasswordController.text.trim());
+                    _textEmailController.clear();
+                    _textPasswordController.clear();
                   }
                 },
                 child: SizedBox(

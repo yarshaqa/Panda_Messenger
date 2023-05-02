@@ -23,7 +23,17 @@ mixin GeneralWidgets {
           fillColor: Colors.black12,
           icon: Icon(icon)),
     );
+  }
 
-
+  static ScaffoldFeatureController<SnackBar, SnackBarClosedReason>
+      defaultToastSnackBar(BuildContext context, String message) {
+    return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(
+        textAlign: TextAlign.center,
+        message,
+        style: const TextStyle(color: Colors.red),
+      ),
+      backgroundColor: Colors.white,
+    ));
   }
 }

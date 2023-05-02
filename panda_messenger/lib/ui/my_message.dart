@@ -13,17 +13,14 @@ class MessageCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       alignment: AlignmentDirectional.topEnd,
-      children: [
-        const SizedBox(width: 10),
-        messagePositioned(context)
-      ],
+      children: [const SizedBox(width: 10), messagePositioned(context)],
     );
   }
 
   Widget messagePositioned(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10)),
+        borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(10)),
         color: messageModel.senderName ==
                 UserRepository.userRepository.loggedUser.email
             ? Colors.deepPurple
@@ -31,18 +28,30 @@ class MessageCard extends StatelessWidget {
       ),
       width: MediaQuery.of(context).size.width - 30,
       child: Stack(
-        children: [ Positioned(
-          top: 1,
-          child: Text(' ${messageModel.senderName}',
-              style: TextStyle(fontWeight: FontWeight.bold)),
-        ),
+        children: [
+          Positioned(
+            top: 1,
+            child: Text(' ${messageModel.senderName}',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: messageModel.senderName ==
+                            UserRepository.userRepository.loggedUser.email
+                        ? Colors.white
+                        : Colors.black87)),
+          ),
           Positioned(
             top: 20,
             child: Text(
               ' ${messageModel.message}',
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.justify,
-              style: const TextStyle(fontSize: 16, color: Colors.black87),
+              style: TextStyle(
+                fontSize: 16,
+                color: messageModel.senderName ==
+                        UserRepository.userRepository.loggedUser.email
+                    ? Colors.white
+                    : Colors.black87,
+              ),
               maxLines: 20,
             ),
           ),
@@ -51,7 +60,11 @@ class MessageCard extends StatelessWidget {
             right: 1,
             child: Text(
                 'Posted on ${DateFormat('MMMM, d, yyyy').format(DateTime.parse(messageModel.time!))}',
-                style: const TextStyle(color: Colors.black54)),
+                style: TextStyle(
+                    color: messageModel.senderName ==
+                            UserRepository.userRepository.loggedUser.email
+                        ? Colors.white
+                        : Colors.black87)),
           )
         ],
       ),

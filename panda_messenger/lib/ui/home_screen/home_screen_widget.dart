@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:panda_messenger/ui/home_screen/home_cubit.dart';
 import 'package:panda_messenger/ui/home_screen/home_state.dart';
 import 'package:panda_messenger/ui/my_message.dart';
@@ -10,7 +11,7 @@ import '../../models/message_model.dart';
 import '../general_widgets.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -19,7 +20,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController myMessageController = TextEditingController();
   bool isDisplayedTypeMessage = false;
-  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -29,7 +29,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print('isDisplayedTypeMessage $isDisplayedTypeMessage');
     return Scaffold(
       floatingActionButton: Visibility(
         visible: !isDisplayedTypeMessage,
@@ -40,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 setState(() {});
               }
             },
-            child: Icon(Icons.add)),
+            child: const Icon(Icons.add)),
       ),
       body: MediaQuery.removePadding(
         context: context,
@@ -59,75 +58,78 @@ class _HomeScreenState extends State<HomeScreen> {
                   left: 25,
                   child: Text(
                     UserRepository.userRepository.getUserEmail,
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                   )),
               Positioned(
                 top: MediaQuery.of(context).size.height * 0.09,
                 right: 30,
-                child: IconButton(
-                  onPressed: () {
-                    context.read<HomeCubit>().logOutUser();
-                  },
-                  icon: const Icon(Icons.logout_sharp, color: Colors.white),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(500),
+                  child: Container(
+                    color: Colors.white,
+                    child: IconButton(
+                      onPressed: () {
+                        BlocProvider.of<HomeCubit>(context).logOutUser();
+                      },
+                      icon: const Icon(FontAwesomeIcons.doorOpen,
+                          color: Colors.deepPurple),
+                    ),
+                  ),
                 ),
               )
             ],
           ),
-          BlocConsumer<HomeCubit, HomeStates>(
-              listener: (context, state) {
-                if(state is HomeLogOutState){
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => AuthScreen()),);
-                }
-              },
-              builder: (context, state) {
-                print('STATE $state');
-                if (state is HomeLoadedState) {
-                  return Padding(
-                    padding: const EdgeInsets.all(18.0),
-                    child: Container(
-                      child: Column(
-                        children: [
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          GeneralWidgets.textFieldGeneral("Search"),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          SingleChildScrollView(
-                              child: Container(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.68,
-                                  child: messages(context, state))),
-                          typeMessage(context, state),
-                        ],
-                      ),
+          BlocConsumer<HomeCubit, HomeStates>(listener: (context, state) {
+            if (state is HomeLogOutState) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (_) => AuthScreen()),
+              );
+            }
+            if (state is HomeErrorState) {
+              GeneralWidgets.defaultToastSnackBar(context, state.errorMessage);
+            }
+          }, builder: (context, state) {
+            if (state is HomeLoadedState) {
+              return Padding(
+                padding: const EdgeInsets.all(18.0),
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 10,
                     ),
-                  );
-                } else {
-                  return Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        const Text('No messages yet in chat..'),
-                        Container(child: typeMessage(context, state))
-                      ]);
-                }
-              })
+                    GeneralWidgets.textFieldGeneral("Search"),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    SingleChildScrollView(
+                        child: SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.66,
+                            child: messages(context, state))),
+                    typeMessage(context, state),
+                  ],
+                ),
+              );
+            } else {
+              return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const Text('No messages yet in chat..'),
+                    Container(child: typeMessage(context, state))
+                  ]);
+            }
+          })
         ]),
       ),
     );
   }
 
   Widget messages(BuildContext context, state) {
-    print('messages ${state.messagesList}');
     return ListView.builder(
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
       reverse: true,
-      itemCount: state.messagesList.length - 1,
+      itemCount: state.messagesList.length,
       itemBuilder: (context, index) {
         return Padding(
           padding: const EdgeInsets.only(top: 20),
@@ -156,7 +158,7 @@ class _HomeScreenState extends State<HomeScreen> {
             minLines: 1,
             controller: myMessageController,
             decoration: InputDecoration(
-              contentPadding: EdgeInsets.only(top: 15),
+              contentPadding: const EdgeInsets.only(top: 15),
               border: InputBorder.none,
               hintText: 'Type Your Message',
               hintStyle: const TextStyle(color: Colors.grey),
@@ -170,12 +172,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     InkWell(
                       onTap: () {
-                        print('tapped ${myMessageController.text}');
-                        // if (myMessageController.text != '') {
-                        //   _scrollController.animateTo(
-                        //       _scrollController.position.minScrollExtent,
-                        //       duration: const Duration(seconds: 1),
-                        //       curve: Curves.easeInOut);
                         MessageModel message = MessageModel(
                           message: myMessageController.text,
                           time: DateTime.now().toString(),

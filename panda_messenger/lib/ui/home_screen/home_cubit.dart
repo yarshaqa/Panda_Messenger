@@ -1,17 +1,25 @@
-import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:panda_messenger/internet_connection.dart';
 import 'package:panda_messenger/user_repository.dart';
 
 import '../../auth_repository.dart';
 import '../../models/message_model.dart';
 import 'home_state.dart';
 
-class HomeCubit extends Cubit<HomeStates>{
-  HomeCubit() : super(HomeInitialState());
+class HomeCubit extends Cubit<HomeStates> {
+  HomeCubit() : super(HomeInitialState()) {
+    NetworkConnectivity.instance.myStream.listen((event) async {
+      String stringEvent = event.toString();
+      if (stringEvent == '{ConnectivityResult.none: false}') {
+        emit(HomeErrorState(errorMessage: 'Network problem'));
+      }
+    });
+  }
 
+  NetworkConnectivity connectivity = NetworkConnectivity.instance;
   final auth = AuthRepository();
-
 
   void messagesStream() async {
     print('auth.getLoggedUserId ${auth.getLoggedUserId}');
@@ -29,14 +37,17 @@ class HomeCubit extends Cubit<HomeStates>{
   }
 
   void sendMessage(MessageModel messageModel) async {
-    messageModel.chatId = auth.getLoggedUserId;
-    messageModel.senderName = UserRepository.userRepository.getUserEmail;
-    auth.firebaseDataProvider.sendMessageToPal(messageModel);
+    try {
+      messageModel.chatId = auth.getLoggedUserId;
+      messageModel.senderName = UserRepository.userRepository.getUserEmail;
+      auth.firebaseDataProvider.sendMessageToPal(messageModel);
+    } on SocketException {
+      emit(HomeErrorState(errorMessage: 'Network problem!'));
+    }
   }
 
   void logOutUser() async {
     auth.logOut();
-    emit (HomeLogOutState());
+    emit(HomeLogOutState());
   }
-
 }
