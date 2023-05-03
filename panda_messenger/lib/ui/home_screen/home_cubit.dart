@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:panda_messenger/internet_connection.dart';
 import 'package:panda_messenger/user_repository.dart';
@@ -10,10 +11,9 @@ import 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeStates> {
   HomeCubit() : super(HomeInitialState()) {
-    NetworkConnectivity.instance.myStream.listen((event) async {
-      String stringEvent = event.toString();
-      if (stringEvent == '{ConnectivityResult.none: false}') {
-        emit(HomeErrorState(errorMessage: 'Network problem'));
+    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      if(result == ConnectivityResult.none){
+        emit(HomeErrorState(errorMessage: 'Network problem!'));
       }
     });
   }

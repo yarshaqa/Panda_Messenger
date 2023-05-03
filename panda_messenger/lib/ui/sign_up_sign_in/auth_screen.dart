@@ -50,7 +50,7 @@ class AuthScreen extends StatelessWidget {
                       clipper: CurveClipper(),
                       child: Container(
                         decoration: const BoxDecoration(
-                          color: Colors.deepPurple,
+                          color: Color(0xFF6103EE),
                         ),
                       ))),
               Positioned(
@@ -67,7 +67,7 @@ class AuthScreen extends StatelessWidget {
                 top: 90,
                 child: TextButton(
                     style: TextButton.styleFrom(
-                      foregroundColor: Colors.deepPurple,
+                      foregroundColor: Color(0xFF6103EE),
                     ),
                     onPressed: () {
                       controller.animateToPage(page == 'Sign in' ? 1 : 0,

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
-
 class NetworkConnectivity {
   NetworkConnectivity._();
 
@@ -11,15 +10,17 @@ class NetworkConnectivity {
   static NetworkConnectivity get instance => _instance;
   final _networkConnectivity = Connectivity();
   final _controller = StreamController.broadcast();
+  late final StreamSubscription connectivityListener;
 
   Stream get myStream => _controller.stream;
 
   initialise() async {
     ConnectivityResult result = await _networkConnectivity.checkConnectivity();
     _checkStatus(result);
-    _networkConnectivity.onConnectivityChanged.listen((result) {
+    connectivityListener =
+        _networkConnectivity.onConnectivityChanged.listen((result) {
       _checkStatus(result);
-       result;
+      result;
     });
   }
 
@@ -32,9 +33,10 @@ class NetworkConnectivity {
       isOnline = false;
     }
     _controller.sink.add({result: isOnline});
-
-
   }
 
-  void disposeStream() => _controller.close();
+  void disposeStream() {
+    _controller.close();
+    connectivityListener.cancel();
+  }
 }

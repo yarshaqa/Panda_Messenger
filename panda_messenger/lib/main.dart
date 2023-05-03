@@ -29,10 +29,24 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'Flutter Demo',
           theme: ThemeData(
-            primarySwatch: Colors.deepPurple,
-          ),
+              primaryColor: Color(0xFF6103EE),
+              colorScheme:
+                  ThemeData().colorScheme.copyWith(primary: Color(0xFF6103EE)),
+              floatingActionButtonTheme: FloatingActionButtonThemeData(backgroundColor: Color(0xFF6103EE))
+              // buttonTheme: const ButtonThemeData(buttonColor: Color(0x6103EE)),
+              // elevatedButtonTheme: ElevatedButtonThemeData(
+              //   style: ButtonStyle(
+              //     backgroundColor: MaterialStateProperty.all<Color>(
+              //       Colors.deepPurple,
+              //     ), //button color
+              //     foregroundColor: MaterialStateProperty.all<Color>(
+              //       Color(0x6103EE),
+              //     ), //text (and icon)
+              //   ),
+              // )
+              // primarySwatch: MaterialColor(0xFF6103EE,)
+              ),
           home: Material(child: AuthScreen())),
     );
   }

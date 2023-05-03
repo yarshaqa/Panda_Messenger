@@ -23,8 +23,8 @@ class MessageCard extends StatelessWidget {
         borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(10)),
         color: messageModel.senderName ==
                 UserRepository.userRepository.loggedUser.email
-            ? Colors.deepPurple
-            : Colors.grey,
+            ? const Color(0xFF6103EE)
+            : const Color(0xFFD9D9D9),
       ),
       width: MediaQuery.of(context).size.width - 30,
       child: Stack(

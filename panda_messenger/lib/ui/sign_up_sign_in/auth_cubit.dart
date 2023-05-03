@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:panda_messenger/internet_connection.dart';
 
@@ -6,11 +7,10 @@ import 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthStates> {
   AuthCubit() : super(AuthInitialState()) {
-    NetworkConnectivity.instance.myStream.listen((event) async {
-      String stringEvent = event.toString();
-      if (stringEvent == '{ConnectivityResult.none: false}') {
-        emit(AuthErrorState(errorMessage: 'Network problem'));
-      }
+     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+       if(result == ConnectivityResult.none){
+         emit(AuthErrorState(errorMessage: 'Network problem!'));
+       }
     });
   }
 
