@@ -40,72 +40,74 @@ class _HomeScreenState extends State<HomeScreen> {
                   borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                 ),
                 builder: (BuildContext context) {
-                  return Padding(
-                    padding: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).viewInsets.bottom),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        const Text('Post Message',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Container(
-                          color: const Color(0xFFE8E8E8),
-                          width: MediaQuery.of(context).size.width - 40,
-                          child: TextField(
-                            keyboardType: TextInputType.multiline,
-                            maxLines: 5,
-                            minLines: 5,
-                            controller: myMessageController,
-                            decoration: InputDecoration(
-                              contentPadding: const EdgeInsets.only(top: 15),
-                              enabledBorder: UnderlineInputBorder(
-                                  borderSide: const BorderSide(),
-                                  borderRadius: BorderRadius.circular(30)),
-                              hintText: 'Type Your Message',
-                              hintStyle: const TextStyle(color: Colors.grey),
-                              prefix: const SizedBox(
-                                width: 20,
-                              ),
-                              suffixIcon: SizedBox(
-                                width: 100,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    InkWell(
-                                      onTap: () {
-                                        MessageModel message = MessageModel(
-                                          message: myMessageController.text,
-                                          time: DateTime.now().toString(),
-                                        );
-                                        context
-                                            .read<HomeCubit>()
-                                            .sendMessage(message);
-                                        myMessageController.clear();
-                                      },
-                                      child: const SizedBox(
-                                          width: 50,
-                                          height: 50,
-                                          child: Icon(
-                                            FontAwesomeIcons.solidPaperPlane,
-                                            color: Color(0xFF6103EE),
-                                          )),
-                                    ),
-                                  ],
+                  return SingleChildScrollView(
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).viewInsets.bottom),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          const Text('Post Message',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Container(
+                            color: const Color(0xFFE8E8E8),
+                            width: MediaQuery.of(context).size.width - 40,
+                            child: TextField(
+                              keyboardType: TextInputType.multiline,
+                              maxLines: 5,
+                              minLines: 5,
+                              controller: myMessageController,
+                              decoration: InputDecoration(
+                                contentPadding: const EdgeInsets.only(top: 15),
+                                enabledBorder: UnderlineInputBorder(
+                                    borderSide: const BorderSide(),
+                                    borderRadius: BorderRadius.circular(30)),
+                                hintText: 'Type Your Message',
+                                hintStyle: const TextStyle(color: Colors.grey),
+                                prefix: const SizedBox(
+                                  width: 20,
+                                ),
+                                suffixIcon: SizedBox(
+                                  width: 100,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          MessageModel message = MessageModel(
+                                            message: myMessageController.text,
+                                            time: DateTime.now().toString(),
+                                          );
+                                          context
+                                              .read<HomeCubit>()
+                                              .sendMessage(message);
+                                          myMessageController.clear();
+                                        },
+                                        child: const SizedBox(
+                                            width: 50,
+                                            height: 50,
+                                            child: Icon(
+                                              FontAwesomeIcons.solidPaperPlane,
+                                              color: Color(0xFF6103EE),
+                                            )),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                        const SizedBox(
-                          height: 50,
-                        )
-                      ],
+                          const SizedBox(
+                            height: 50,
+                          )
+                        ],
+                      ),
                     ),
                   );
                 });
