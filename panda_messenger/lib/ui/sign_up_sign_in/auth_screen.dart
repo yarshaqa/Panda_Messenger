@@ -38,7 +38,9 @@ class AuthScreen extends StatelessWidget {
         );
       }
     }, builder: (BuildContext context, state) {
-      if (state is AuthInitialState || state is AuthErrorState) {
+      if (state is AuthLoadingState){
+        return Center(child: CircularProgressIndicator(),);
+      }
         return (Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -89,6 +91,7 @@ class AuthScreen extends StatelessWidget {
                       hintText: 'Email',
                       icon: Icons.email_sharp,
                       text: _textEmailController),
+                  const SizedBox(height: 30,),
                   GeneralWidgets.textFieldWithIconGeneral(
                       hintText: '00000000',
                       icon: Icons.lock,
@@ -122,12 +125,6 @@ class AuthScreen extends StatelessWidget {
             ),
           ],
         ));
-      }
-      {
-        return const Center(
-          child: Text('Unknown State'),
-        );
-      }
     });
   }
 }

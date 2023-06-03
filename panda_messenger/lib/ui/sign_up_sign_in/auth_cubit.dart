@@ -1,6 +1,5 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:panda_messenger/internet_connection.dart';
 
 import '../../auth_repository.dart';
 import 'auth_state.dart';
@@ -23,6 +22,7 @@ class AuthCubit extends Cubit<AuthStates> {
     } else if (userPassword.isEmpty) {
       emit(AuthErrorState(errorMessage: 'Password cannot be empty'));
     } else {
+      emit(AuthLoadingState());
       try {
         await auth.signUp(userEmail, userPassword);
         emit(AuthLoadedState());

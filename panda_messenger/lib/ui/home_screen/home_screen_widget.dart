@@ -19,11 +19,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController myMessageController = TextEditingController();
-  bool isDisplayedTypeMessage = false;
+  TextEditingController searchDataController = TextEditingController();
 
   @override
   void initState() {
-    BlocProvider.of<HomeCubit>(context).messagesStream();
+    BlocProvider.of<HomeCubit>(context)
+        .messagesStream(searchDataController.text);
     super.initState();
   }
 
@@ -34,79 +35,94 @@ class _HomeScreenState extends State<HomeScreen> {
           onPressed: () {
             showModalBottomSheet<void>(
                 context: context,
+                elevation: 0,
                 backgroundColor: const Color(0xFFD9D9D9),
                 barrierColor: Colors.transparent,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                ),
                 builder: (BuildContext context) {
                   return SingleChildScrollView(
                     child: Padding(
                       padding: EdgeInsets.only(
                           bottom: MediaQuery.of(context).viewInsets.bottom),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          const Text('Post Message',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Container(
-                            color: const Color(0xFFE8E8E8),
-                            width: MediaQuery.of(context).size.width - 40,
-                            child: TextField(
-                              keyboardType: TextInputType.multiline,
-                              maxLines: 5,
-                              minLines: 5,
-                              controller: myMessageController,
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.only(top: 15),
-                                enabledBorder: UnderlineInputBorder(
-                                    borderSide: const BorderSide(),
-                                    borderRadius: BorderRadius.circular(30)),
-                                hintText: 'Type Your Message',
-                                hintStyle: const TextStyle(color: Colors.grey),
-                                prefix: const SizedBox(
-                                  width: 20,
-                                ),
-                                suffixIcon: SizedBox(
-                                  width: 100,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      InkWell(
-                                        onTap: () {
-                                          MessageModel message = MessageModel(
-                                            message: myMessageController.text,
-                                            time: DateTime.now().toString(),
-                                          );
-                                          context
-                                              .read<HomeCubit>()
-                                              .sendMessage(message);
-                                          myMessageController.clear();
-                                        },
-                                        child: const SizedBox(
-                                            width: 50,
-                                            height: 50,
-                                            child: Icon(
-                                              FontAwesomeIcons.solidPaperPlane,
-                                              color: Color(0xFF6103EE),
-                                            )),
-                                      ),
-                                    ],
+                      child: Container(
+                        decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(25),
+                                topRight: Radius.circular(25)),
+                            color: Colors.white60,
+                            boxShadow: [
+                              BoxShadow(
+                                  spreadRadius: 4,
+                                  // offset: Offset(-5, 0),
+                                  color: Colors.black38,
+                                  blurRadius: 2),
+                            ]),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            const Text('Post Message',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Container(
+                              color: const Color(0xFFE8E8E8),
+                              width: MediaQuery.of(context).size.width - 40,
+                              child: TextField(
+                                keyboardType: TextInputType.multiline,
+                                maxLines: 5,
+                                minLines: 5,
+                                controller: myMessageController,
+                                decoration: InputDecoration(
+                                  contentPadding:
+                                      const EdgeInsets.only(top: 15),
+                                  enabledBorder: UnderlineInputBorder(
+                                      borderSide: const BorderSide(),
+                                      borderRadius: BorderRadius.circular(30)),
+                                  hintText: 'Type Your Message',
+                                  hintStyle:
+                                      const TextStyle(color: Colors.grey),
+                                  prefix: const SizedBox(
+                                    width: 20,
+                                  ),
+                                  suffixIcon: SizedBox(
+                                    width: 100,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            MessageModel message = MessageModel(
+                                              message: myMessageController.text,
+                                              time: DateTime.now().toString(),
+                                            );
+                                            context
+                                                .read<HomeCubit>()
+                                                .sendMessage(message);
+                                            myMessageController.clear();
+                                          },
+                                          child: const SizedBox(
+                                              width: 50,
+                                              height: 50,
+                                              child: Icon(
+                                                FontAwesomeIcons
+                                                    .solidPaperPlane,
+                                                color: Color(0xFF6103EE),
+                                              )),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                          const SizedBox(
-                            height: 50,
-                          )
-                        ],
+                            const SizedBox(
+                              height: 50,
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   );
@@ -129,7 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   top: MediaQuery.of(context).size.height * 0.11,
                   left: 25,
                   child: Text(
-                    UserRepository.userRepository.getUserEmail,
+                    UserRepository.userRepository.getUserEmail ?? ' ',
                     style: const TextStyle(color: Colors.white),
                   )),
               Positioned(
@@ -170,7 +186,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(
                       height: 10,
                     ),
-                    GeneralWidgets.textFieldGeneral("Search"),
+                    TextField(
+                      onChanged: (text) {
+                        context.read<HomeCubit>().findMessage(text);
+                      },
+                      autofocus: false,
+                      decoration: const InputDecoration(
+                        hintText: 'Search',
+                        filled: true,
+                        fillColor: Colors.black12,
+                      ),
+                    ),
                     const SizedBox(
                       height: 10,
                     ),

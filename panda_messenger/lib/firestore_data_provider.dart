@@ -34,8 +34,7 @@ class FirebaseDataProvider {
       await firestore
           .collection('users')
           .doc(user.uid)
-          .set(userModel.toFirestore());
-      await UserRepository.userRepository.userLoginRepo();
+          .set(userModel.toFirestore()).whenComplete(() => UserRepository.userRepository.userLoginRepo());
     } on FirebaseException catch (e) {
       throw FirebaseException(plugin: e.plugin, message: e.message);
     }

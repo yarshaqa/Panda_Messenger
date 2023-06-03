@@ -27,46 +27,49 @@ class MessageCard extends StatelessWidget {
             : const Color(0xFFD9D9D9),
       ),
       width: MediaQuery.of(context).size.width - 30,
-      child: Stack(
-        children: [
-          Positioned(
-            top: 1,
-            child: Text(' ${messageModel.senderName}',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: messageModel.senderName ==
-                            UserRepository.userRepository.loggedUser.email
-                        ? Colors.white
-                        : Colors.black87)),
-          ),
-          Positioned(
-            top: 20,
-            child: Text(
-              ' ${messageModel.message}',
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.justify,
-              style: TextStyle(
-                fontSize: 16,
-                color: messageModel.senderName ==
-                        UserRepository.userRepository.loggedUser.email
-                    ? Colors.white
-                    : Colors.black87,
-              ),
-              maxLines: 20,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Stack(
+          children: [
+            Positioned(
+              top: 1,
+              child: Text(' ${messageModel.senderName}',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: messageModel.senderName ==
+                              UserRepository.userRepository.loggedUser.email
+                          ? Colors.white
+                          : Colors.black87)),
             ),
-          ),
-          Positioned(
-            bottom: 5,
-            right: 1,
-            child: Text(
-                'Posted on ${DateFormat('MMMM, d, yyyy').format(DateTime.parse(messageModel.time!))}',
+            Positioned(
+              top: 20,
+              child: Text(
+                ' ${messageModel.message}',
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.justify,
                 style: TextStyle(
-                    color: messageModel.senderName ==
-                            UserRepository.userRepository.loggedUser.email
-                        ? Colors.white
-                        : Colors.black87)),
-          )
-        ],
+                  fontSize: 16,
+                  color: messageModel.senderName ==
+                          UserRepository.userRepository.loggedUser.email
+                      ? Colors.white
+                      : Colors.black87,
+                ),
+                maxLines: 20,
+              ),
+            ),
+            Positioned(
+              bottom: 5,
+              right: 1,
+              child: Text(
+                  'Posted on ${DateFormat('MMMM, d, yyyy').format(DateTime.parse(messageModel.time!))}',
+                  style: TextStyle(
+                      color: messageModel.senderName ==
+                              UserRepository.userRepository.loggedUser.email
+                          ? Colors.white
+                          : Colors.black87)),
+            )
+          ],
+        ),
       ),
     );
   }

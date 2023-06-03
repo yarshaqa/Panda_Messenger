@@ -3,13 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'firestore_data_provider.dart';
 
 class AuthRepository {
-  static final AuthRepository authRepository = AuthRepository._internal();
-
-  factory AuthRepository() {
-    return authRepository;
-  }
-
-  AuthRepository._internal();
 
   FirebaseDataProvider firebaseDataProvider =
       FirebaseDataProvider(firestore: FirebaseFirestore.instance);
